@@ -3,33 +3,68 @@
 
 # バッチサーバ設定ファイル
 CURRENT_DIR=`dirname $0`
-#. ${CURRENT_DIR}/conf/batchenv.ini
+#. ${CURRENT_DIR}/conf/env.ini
 
+#
 today=$(date "+%Y%m%d")
-
 tag=01
 pf=core
-
 work_path="/c/wrk/${today}${tag}_${pf}"
+user_id="nttd-suzukirke"
+#TODO:input password
+user_pw=""
+repo="fr-oms-core-batch"
+git_url="https://${user_id}:${user_pw}@github.com/fastretailing/${repo}.git"
 
-echo ${work_path}
+
+
+#create work directory
+mkdir ${work_path}
+
+if [ $? -ne 1 ]; then
+	echo "work directry is created."
+else
+	echo "Failed to create work directry."
+	exit 1
+fi
+#move to work directry
+cd ${work_path}
+
+if [ $? -ne 1 ]; then
+	echo "Moved to work directry."
+else
+	echo "Failed to move to work directry."
+	exit 1
+fi
+
+pwd
+
+
+#clone 
+echo "Cloning from Git..."
+git clone ${git_url}
+
+
+if [ $? -ne 1 ]; then
+	echo "Git clone has finished."
+else
+	echo "Failed to clone ."
+	exit 1
+fi
+
+#check if repository exists.
+cd ${repo}
+
+if [ $? -ne 1 ]; then
+	echo "Moved to work directry."
+else
+	echo "Failed to move to work directry."
+	exit 1
+fi
+
+pwd
 
 << comment
-mkdir /c/wrk/${today}${tag}_core
-
-cd /c/wrk/2018042403_core
-
-pwd
-
-git clone https://nttd-btsuzukirke@github.com/fastretailing/fr-oms-core-batch.git
-#input pass
-
-cd fr-oms-core-batch
-
-
-pwd
-
-
 git branch -a
 
 
