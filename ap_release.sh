@@ -1,88 +1,86 @@
 #!/bin/bash
 
 
-# 設定ファイル
+# Load setting file
 CURRENT_DIR=`dirname $0`
-#. ${CURRENT_DIR}/conf/env.ini
+. ${CURRENT_DIR}/env.ini
 
-#
-today=$(date "+%Y%m%d")
-tag=01
-pf=core
-work_path="/c/wrk/${today}${tag}_${pf}"
-user_id="nttd-suzukirke"
-#TODO:input password
-user_pw="riku1192"
-repo="fr-oms-core-batch"
-git_url="https://${user_id}@github.com/fastretailing/${repo}.git"
-
-
-#:${user_pw}
-#create work directory
+# Create work directory
 mkdir ${work_path}
 
-if [ $? -ne 1 ]; then
-	echo "work directry is created."
-else
+if [ $? -ne 0 ]; then
 	echo "Failed to create work directry."
-	new_tag=$(expr ${tag} + 1)
-	mkdir /c/wrk/${today}0${new_tag}_${pf}
-	echo "Made /c/wrk/${today}${new_tag}_${pf}"
-	exit 1
+	exit $?
+else
+	echo "work directry is created."
+
 fi
-#move to work directry
+
+# Change work directry
 cd ${work_path}
 
-if [ $? -ne 1 ]; then
-	echo "Moved to work directry."
-else
+if [ $? -ne 0 ]; then
 	echo "Failed to change directry."
-	exit 1
+	exit $?
+else
+	echo "Moved to work directry."
 fi
 
 pwd
 
 
-#clone 
+# Clone 
 echo "Cloning from Git..."
 git clone ${git_url}
 
 
-<< comment
-if [ $? -ne 1 ]; then
-	echo "Git clone has finished."
-else
+if [ $? -ne 0 ]; then
 	echo "Failed to clone ."
-	exit 1
+	exit $?
+
 fi
 
-#check if repository exists.
+# Change work directry
 cd ${repo}
 
-if [ $? -ne 1 ]; then
-	echo "Moved to work directry."
-else
+if [ $? -ne 0 ]; then
 	echo "Failed to change directry."
-	exit 1
+	exit $?
+else
+	echo "Moved to work directry."
 fi
 
 pwd
 
+# Make branch
 git branch -a
+if [ $? -ne 0 ]; then
+	echo "Failed to make branch."
+	exit $?
+else
+	echo "Made branch."
+fi
 
+# Check out
+git checkout ${dev}
+if [ $? -ne 0 ]; then
+	echo "Failed to checkout."
+	exit $?
+else
+	echo "checked out."
+fi
 
-git checkout develop-sandbox5
-
+<< comment
 
 git merge --no-commit origin/master-sandbox
 
 if confict
-git status
--
-git diff
-git add .
-git commit -m "【コメント】"
-git status
+	git status
+	-
+	git diff
+	git add .
+	git commit -m "${comment}"
+	git status
 fi
 
 #check file
