@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# バッチサーバ設定ファイル
+# 設定ファイル
 CURRENT_DIR=`dirname $0`
 #. ${CURRENT_DIR}/conf/env.ini
 
@@ -12,12 +12,12 @@ pf=core
 work_path="/c/wrk/${today}${tag}_${pf}"
 user_id="nttd-suzukirke"
 #TODO:input password
-user_pw=""
+user_pw="riku1192"
 repo="fr-oms-core-batch"
-git_url="https://${user_id}:${user_pw}@github.com/fastretailing/${repo}.git"
+git_url="https://${user_id}@github.com/fastretailing/${repo}.git"
 
 
-
+#:${user_pw}
 #create work directory
 mkdir ${work_path}
 
@@ -25,6 +25,9 @@ if [ $? -ne 1 ]; then
 	echo "work directry is created."
 else
 	echo "Failed to create work directry."
+	new_tag=$(expr ${tag} + 1)
+	mkdir /c/wrk/${today}0${new_tag}_${pf}
+	echo "Made /c/wrk/${today}${new_tag}_${pf}"
 	exit 1
 fi
 #move to work directry
@@ -33,7 +36,7 @@ cd ${work_path}
 if [ $? -ne 1 ]; then
 	echo "Moved to work directry."
 else
-	echo "Failed to move to work directry."
+	echo "Failed to change directry."
 	exit 1
 fi
 
@@ -45,6 +48,7 @@ echo "Cloning from Git..."
 git clone ${git_url}
 
 
+<< comment
 if [ $? -ne 1 ]; then
 	echo "Git clone has finished."
 else
@@ -58,13 +62,12 @@ cd ${repo}
 if [ $? -ne 1 ]; then
 	echo "Moved to work directry."
 else
-	echo "Failed to move to work directry."
+	echo "Failed to change directry."
 	exit 1
 fi
 
 pwd
 
-<< comment
 git branch -a
 
 
