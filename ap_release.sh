@@ -3,7 +3,7 @@
 
 # Load setting file
 CURRENT_DIR=`dirname $0`
-. ${CURRENT_DIR}/env.ini
+. ${CURRENT_DIR}/setting.ini
 
 # Create work directory
 mkdir ${work_path}
@@ -30,7 +30,7 @@ pwd
 
 
 # Clone 
-echo "Cloning from Git..."
+echo "Cloning from Git...${git_url}"
 git clone ${git_url}
 
 
@@ -39,6 +39,7 @@ if [ $? -ne 0 ]; then
 	exit $?
 
 fi
+
 
 # Change work directry
 cd ${repo}
@@ -52,13 +53,11 @@ fi
 
 pwd
 
-# Make branch
+# Show branch
 git branch -a
 if [ $? -ne 0 ]; then
-	echo "Failed to make branch."
+	echo "Failed to show branch."
 	exit $?
-else
-	echo "Made branch."
 fi
 
 # Check out
@@ -69,7 +68,6 @@ if [ $? -ne 0 ]; then
 else
 	echo "checked out."
 fi
-
 << comment
 
 git merge --no-commit origin/master-sandbox
